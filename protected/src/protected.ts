@@ -1,14 +1,9 @@
-// You can only inherite from one class.
-// super function
-// calls the constructor of the base class
-// you have to call your super function before doing anything with the this keyword
+// protected
 
 class Departments_three {
-  private employees: string[] = [];
+  // in below line of code instead of using private we will use protected.
+  protected employees: string[] = [];
 
-  // the constructor function is used for initialization
-
-  //   shorthand for writing private and public naming
   constructor(private id: string, public name: string) {}
 
   describe() {
@@ -37,14 +32,26 @@ class FrontEndDepartment extends Departments_three {
     super(id, "React");
     this.admins = admins;
   }
+
+  addEmployees(name: string): void {
+    if (name === "mary" || name === "james") {
+      return;
+    }
+    this.employees.push(name);
+  }
 }
 
 // const accountings_three = new FrontEndDepartment("23434", "Accounting");
 const accountings_three = new FrontEndDepartment("23434", ["winnie"]);
 
-accountings_three.addEmployees("Tim");
-accountings_three.addEmployees("James");
-accountings_three.addEmployees("Evans");
+// accountings_three.addEmployees("Tim");
+// accountings_three.addEmployees("James");
+// accountings_three.addEmployees("Evans");
 accountings_three.printEmployeeData();
 accountings_three.describe();
+
+accountings_three.addEmployees("james");
+accountings_three.addEmployees("mary");
+
+accountings_three.addEmployees("njoroge");
 console.log(accountings_three);
