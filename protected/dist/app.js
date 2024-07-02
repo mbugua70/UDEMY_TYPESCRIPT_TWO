@@ -1,14 +1,17 @@
 "use strict";
-class Department {
-    constructor(n) {
-        this.name = n;
+let add;
+add = (n1, n2) => {
+    return n1 + n2;
+};
+console.log(add(45, 6));
+let user;
+class Person {
+    constructor(name) {
+        this.name = name;
     }
-    describe() {
-        console.log(`Department: ${this.name}`);
+    greet(phrase) {
+        console.log(`The ${phrase} belongs to ${this.name}`);
     }
 }
-const accounting = new Department("Accounting");
-console.log(accounting);
-accounting.describe();
-const accountingCopy = { name: "DUMMY", describe: accounting.describe };
-accountingCopy.describe();
+user = new Person("john");
+user.greet("silo");
