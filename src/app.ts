@@ -171,3 +171,10 @@ const fetchedUserData = {
 
 // With optional chaining operator even when a variable does not exist, it won't throw an unnecessary error
 console.log(fetchedUserData?.job?.title)
+
+// Nullish coalescing
+
+const userOne = null;
+// the two ?? question marks means if the userOne is null/undefined and not empty string then they should use the default as the value
+const storedData = userOne ?? "Default"
+console.log(storedData)

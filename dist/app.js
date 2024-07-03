@@ -70,3 +70,6 @@ const fetchedUserData = {
     job: { title: "Lodash", description: "my own work" }
 };
 console.log((_a = fetchedUserData === null || fetchedUserData === void 0 ? void 0 : fetchedUserData.job) === null || _a === void 0 ? void 0 : _a.title);
+const userOne = null;
+const storedData = userOne !== null && userOne !== void 0 ? userOne : "Default";
+console.log(storedData);
