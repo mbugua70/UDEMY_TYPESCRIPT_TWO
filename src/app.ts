@@ -95,6 +95,7 @@ class Product {
 
   // setter
   // accessor decriptor
+  // the accessor decriptor can be used to return the something
   @Log2
   set price(val: number) {
     if (val > 0) {
@@ -109,8 +110,123 @@ class Product {
     this.title = t;
   }
 
+  // the method decorator below can be used to return something.
+
   @Log3
   addPrice(@Log4 tax: number) {
     return this._price * (1 + tax);
   }
 }
+
+function Autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
+  const originalMethod = descriptor.value;
+  const adjDescriptor: PropertyDescriptor = {
+    configurable: true,
+    enumerable: false,
+    get() {
+      const bindFn = originalMethod.bind(this);
+      return bindFn;
+    },
+  };
+  return adjDescriptor;
+}
+
+class Printer {
+  message = "This works ";
+
+  showMessage() {
+    console.log(this.message);
+  }
+}
+
+const p = new Printer();
+
+const buttonEl = document.querySelector("button")!;
+console.log(buttonEl);
+buttonEl.addEventListener("click", () => {
+  p.showMessage();
+});
+
+// decorators for validation
+
+interface ValidatorConfig {
+  [property: string]: {
+    [validatableProp: string]: string[];
+  };
+}
+
+const registeredValidators: ValidatorConfig = {};
+// the property validation function gets two arguements
+
+function Required(target: any, propName: string) {
+  registeredValidators[target.constructor.name] = {
+    ...registeredValidators[target.constructor.name],
+    // [propName]: ["required"],
+    [propName]: [
+      ...(registeredValidators[target.constructor.name]?.[propName] ?? []),
+      "required",
+    ],
+  };
+}
+
+function PositiveNumber(target: any, propName: string) {
+  registeredValidators[target.constructor.name] = {
+    // [propName]: ["positive"],
+    ...registeredValidators[target.constructor.name],
+    [propName]: [
+      ...(registeredValidators[target.constructor.name]?.[propName] ?? []),
+      "positive",
+    ],
+  };
+}
+
+function Validate(obj: any) {
+  const objectValidorfun = registeredValidators[obj.constructor.name];
+
+  if (!objectValidorfun) {
+    return true;
+  }
+
+  for (const prop in objectValidorfun) {
+    for (const validator of objectValidorfun[prop]) {
+      switch (validator) {
+        case "required":
+          return !!obj[prop];
+        case "positive":
+          return obj[prop] > 0;
+      }
+    }
+  }
+  return true;
+}
+
+class Course {
+  @Required
+  title: string;
+  @PositiveNumber
+  price: number;
+
+  constructor(t: string, p: number) {
+    this.price = p;
+    this.title = t;
+  }
+}
+
+const form = document.querySelector("form")!;
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const titleEl = document.getElementById("title") as HTMLInputElement;
+  const priceEl = document.getElementById("price") as HTMLInputElement;
+
+  const title = titleEl.value;
+  const price = +priceEl.value;
+
+  const newCourse = new Course(title, price);
+
+  if (!Validate(newCourse)) {
+    alert("Validation failed");
+  }
+  console.log(newCourse);
+});
